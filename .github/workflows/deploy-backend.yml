@@ -34,6 +34,7 @@ jobs:
         run: npx prisma migrate deploy
         env:
           DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
 
       - name: Deploy to Vercel
         run: |
