@@ -1,0 +1,27 @@
+# Dependencies
+node_modules
+
+# Environment
+.env
+.env.*
+!.env.example
+
+
+# AI tools & cache
+.gemini
+.agents
+.antigravity
+GEMINI.md
+AGENTS.md
+.cursor
+.aider*
+.copilot
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode
+.idea
+*.sublime-workspace

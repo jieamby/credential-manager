@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+
+model User {
+  id           String    @id
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  name         String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+
+  credentials   Credential[]
+  groupMembers  CredentialGroupMember[]
+
+  @@index([deletedAt])
+  @@map("users")
+}
+
+model CredentialCategory {
+  id          String    @id
+  name        String
+  description String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  credentials Credential[]
+  groups      CredentialGroup[]
+
+  @@index([deletedAt])
+  @@index([name])
+  @@map("credential_categories")
+}
+
+model CredentialGroup {
+  id          String    @id
+  name        String
+  description String?
+  parentId    String?   @map("parentId")
+  categoryId  String?   @map("category_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  parent      CredentialGroup?  @relation("CredentialGroupHierarchy", fields: [parentId], references: [id])
+  children    CredentialGroup[] @relation("CredentialGroupHierarchy")
+  category    CredentialCategory? @relation(fields: [categoryId], references: [id])
+  credentials Credential[]
+  members     CredentialGroupMember[]
+
+  @@index([deletedAt])
+  @@index([name])
+  @@index([parentId])
+  @@index([categoryId])
+  @@map("credential_groups")
+}
+
+model CredentialGroupMember {
+  id        String    @id
+  groupId   String    @map("group_id")
+  userId    String    @map("user_id")
+  role      String    @default("member")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  group CredentialGroup @relation(fields: [groupId], references: [id])
+  user  User            @relation(fields: [userId], references: [id])
+
+  @@unique([groupId, userId])
+  @@index([groupId])
+  @@index([userId])
+  @@index([deletedAt])
+  @@map("credential_group_members")
+}
+
+model Credential {
+  id                String    @id
+  title             String
+  username          String?
+  url               String?
+  notes             String?
+  encryptedPassword String    @map("encrypted_password")
+  encryptionIv      String    @map("encryption_iv")
+  encryptionTag     String    @map("encryption_tag")
+  userId            String    @map("user_id")
+  groupId           String?   @map("group_id")
+  categoryId        String?   @map("category_id")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  deletedAt         DateTime? @map("deleted_at")
+
+  user     User                @relation(fields: [userId], references: [id])
+  group    CredentialGroup?    @relation(fields: [groupId], references: [id])
+  category CredentialCategory? @relation(fields: [categoryId], references: [id])
+
+  @@index([categoryId])
+  @@index([deletedAt])
+  @@index([groupId])
+  @@index([title])
+  @@index([userId])
+  @@map("credentials")
+}

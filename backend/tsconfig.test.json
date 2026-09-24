@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "resolvePackageJsonExports": false,
+    "allowJs": true,
+    "types": ["node", "jest"],
+    "noEmit": true
+  },
+  "include": ["test/**/*.ts", "src/**/*.ts"]
+}
