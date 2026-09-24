@@ -30,12 +30,6 @@ jobs:
       - name: Generate Prisma client
         run: npx prisma generate
 
-      - name: Push database schema
-        run: npx prisma db push --accept-data-loss
-        env:
-          DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
-
       - name: Deploy to Vercel
         run: |
           npx vercel --token ${{ secrets.VERCEL_TOKEN }} \
@@ -45,3 +39,4 @@ jobs:
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_BACKEND_PROJECT_ID }}
+
