@@ -237,7 +237,7 @@ export class CredentialGroupService {
       where: { groupId, userId: user.id },
     });
 
-    let member;
+    let member: { id: string; userId: string; role: string; createdAt: Date };
     if (existing && !existing.deletedAt) {
       throw new BadRequestException('User is already a member of this group');
     }
@@ -339,7 +339,9 @@ export class CredentialGroupService {
     });
 
     if (!owner) {
-      throw new ForbiddenException('Only the group owner can perform this action');
+      throw new ForbiddenException(
+        'Only the group owner can perform this action',
+      );
     }
   }
 

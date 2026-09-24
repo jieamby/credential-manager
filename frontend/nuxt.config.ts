@@ -21,5 +21,5 @@ export default defineNuxtConfig({
     },
   },
   devServer: { port: 3001 },
-  runtimeConfig: { public: { apiBase: "http://localhost:3000/api" } },
+  runtimeConfig: { public: { apiBase: "https://credential-manager-gqoo9p44x-jieambys-projects.vercel.app/api" } },
 });

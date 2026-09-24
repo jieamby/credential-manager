@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { randomUUID } from 'node:crypto';
 
 const prisma = new PrismaClient();
@@ -11,7 +11,9 @@ async function main(): Promise<void> {
   const adminPassword = process.env.SEED_ADMIN_PASSWORD;
 
   if (!adminEmail || !adminPassword) {
-    throw new Error('SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD must be configured');
+    throw new Error(
+      'SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD must be configured',
+    );
   }
 
   const passwordHash = await bcrypt.hash(adminPassword, 12);
